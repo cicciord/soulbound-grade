@@ -1,0 +1,17 @@
+{
+  "name": "soulbound-grade",
+  "version": "1.0.0",
+  "description": "Smart contract implementation for soulbound grade",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Francesco Laterza",
+  "license": "MIT",
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2",
+    "hardhat": "^2.22.4"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-viem": "^3.0.0"
+  }
+}
