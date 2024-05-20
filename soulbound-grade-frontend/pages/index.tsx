@@ -55,10 +55,23 @@ const Home: NextPage = () => {
           )
         ) : (
           <>
-            <ConnectButton showBalance={false} />
-            <Typography sx={{ margin: 2 }}>
-              Connect your wallet to start using the app.
-            </Typography>
+            <Box sx={{ margin: 4 }}>
+              <ShowGradeForm />
+            </Box>
+            <Box
+              sx={{
+                margin: 4,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ConnectButton showBalance={false} />
+              <Typography sx={{ margin: 2 }}>
+                Connect your wallet if you are the owner to assign grades
+              </Typography>
+            </Box>
           </>
         )}
       </Container>
