@@ -25,17 +25,20 @@ const ShowGradeForm = () => {
 
   return (
     <Box>
-      <Card raised>
+      <Card raised sx={{ width: 625 }}>
         <CardContent>
           <Typography variant="h4">Show Grade</Typography>
         </CardContent>
 
-        <CardContent>
-          <TextField label="Student ID" onChange={handleIdChange} />
-        </CardContent>
-
-        <CardContent>
+        <CardContent sx={{ display: "flex" }}>
           <TextField
+            fullWidth
+            label="Student ID"
+            onChange={handleIdChange}
+            sx={{ marginRight: 1 }}
+          />
+          <TextField
+            fullWidth
             label="Grade"
             value={data || ""}
             InputProps={{

@@ -13,7 +13,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { ChangeEvent, useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useWriteContract } from "wagmi";
 
 import { abi, address } from "../constants/soulboundGrade";
@@ -32,37 +33,61 @@ const AssignGradeForm = () => {
   const [studentId, setStudentId] = useState<number | "">("");
   const [grade, setGrade] = useState<string>("18");
 
-  const { writeContract } = useWriteContract();
+  const { writeContract, reset, isPending, isSuccess, isError, error } =
+    useWriteContract();
 
   const handleGradeChange = (event: SelectChangeEvent) => {
-    setGrade(event.target.value as string);
+    setGrade(() => event.target.value as string);
   };
 
   const handleAddressChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setStudentAddress(event.target.value as `0x${string}`);
+    setStudentAddress(() => event.target.value as `0x${string}`);
   };
 
   const handleIdChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setStudentId(parseInt(event.target.value));
+    setStudentId(() => parseInt(event.target.value));
   };
 
   return (
     <Box>
-      <Card raised>
+      {isSuccess && (
+        <Alert
+          severity="success"
+          onClose={() => reset()}
+          sx={{ marginBottom: 2 }}
+        >
+          Grade assigned successfully.
+        </Alert>
+      )}
+      {isError && (
+        <Alert
+          severity="error"
+          onClose={() => reset()}
+          sx={{ marginBottom: 2, width: 625 }}
+        >
+          {error?.message}
+        </Alert>
+      )}
+      <Card raised sx={{ width: 625 }}>
         <CardContent>
           <Typography variant="h4">Assign Grade</Typography>
         </CardContent>
 
-        <CardContent>
+        <CardContent sx={{ display: "flex" }}>
           <TextField
+            fullWidth
             required
             label="Student Address"
+            value={studentAddress}
             onChange={handleAddressChange}
+            sx={{ marginRight: 1 }}
           />
-        </CardContent>
-
-        <CardContent>
-          <TextField required label="Student ID" onChange={handleIdChange} />
+          <TextField
+            required
+            label="Student ID"
+            value={studentId}
+            onChange={handleIdChange}
+          />
         </CardContent>
 
         <CardContent>
@@ -80,22 +105,29 @@ const AssignGradeForm = () => {
         </CardContent>
 
         <CardActions>
-          <Button
-            onClick={() => {
-              console.log(`Student Address: ${studentAddress}`);
-              console.log(`Student ID: ${studentId}`);
-              console.log(`Grade: ${grade}`);
-              writeContract({
-                abi: abi,
-                address: address,
-                chainId: chains[0].id,
-                functionName: "safeMint",
-                args: [studentAddress, studentId, grade],
-              });
-            }}
+          <LoadingButton
+            onClick={() =>
+              writeContract(
+                {
+                  abi: abi,
+                  address: address,
+                  chainId: chains[0].id,
+                  functionName: "safeMint",
+                  args: [studentAddress, studentId, grade],
+                },
+                {
+                  onSuccess: () => {
+                    setStudentAddress("");
+                    setStudentId("");
+                    setGrade("18");
+                  },
+                }
+              )
+            }
+            loading={isPending}
           >
-            Submit
-          </Button>
+            <span>Submit</span>
+          </LoadingButton>
         </CardActions>
       </Card>
     </Box>
