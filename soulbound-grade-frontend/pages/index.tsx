@@ -21,7 +21,7 @@ import ShowGradeForm from "../components/ShowGradeForm";
 
 const Home: NextPage = () => {
   const { address } = useAccount();
-  const { error, isLoading } = useConnectorClient();
+  // const { error, isLoading } = useConnectorClient();
 
   const { data: ownerAddress } = useReadContract({
     abi: soulboundGradeAbi,
@@ -30,18 +30,18 @@ const Home: NextPage = () => {
     chainId: chains[0].id,
   });
 
-  if (isLoading)
-    return (
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    );
+  // if (isLoading)
+  //   return (
+  //     <Backdrop
+  //       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+  //       open={isLoading}
+  //     >
+  //       <CircularProgress color="inherit" />
+  //     </Backdrop>
+  //   );
 
   ///TODO: make an error screen
-  if (error) return <Typography>{error.message}</Typography>;
+  // if (error) return <Typography>{error.message}</Typography>;
 
   return (
     <>

@@ -9,6 +9,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -32,7 +33,7 @@ const AssignGradeForm = () => {
   const [studentId, setStudentId] = useState<number | "">("");
   const [grade, setGrade] = useState<string>("18");
 
-  const { writeContract, reset, isPending, isSuccess, isError, error } =
+  const { writeContract, reset, isPending, isSuccess, isError } =
     useWriteContract();
 
   const handleGradeChange = (event: SelectChangeEvent) => {
@@ -49,24 +50,32 @@ const AssignGradeForm = () => {
 
   return (
     <Box>
-      {isSuccess && (
+      <Snackbar
+        open={isSuccess}
+        autoHideDuration={6000}
+        onClose={() => reset()}
+      >
         <Alert
-          severity="success"
           onClose={() => reset()}
-          sx={{ marginBottom: 2 }}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
         >
           Grade assigned successfully.
         </Alert>
-      )}
-      {isError && (
+      </Snackbar>
+
+      <Snackbar open={isError} autoHideDuration={6000} onClose={() => reset()}>
         <Alert
-          severity="error"
           onClose={() => reset()}
-          sx={{ marginBottom: 2, width: 625 }}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
         >
-          {error?.message}
+          Something went wrong.
         </Alert>
-      )}
+      </Snackbar>
+
       <Card raised sx={{ width: 625 }}>
         <CardContent>
           <Typography variant="h4">Assign Grade</Typography>
