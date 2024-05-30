@@ -16,6 +16,11 @@ const ShowGradeForm = () => {
     args: [studentId],
     query: {
       enabled: studentId !== "" && studentId <= 999999 && studentId > 99999,
+      select: (data) => {
+        const metadata_str = atob(data as string);
+        const metadata = JSON.parse(metadata_str);
+        return metadata.attributes[0].value;
+      }
     },
   });
 
