@@ -21,38 +21,69 @@ describe("SoulboundGrade", function () {
 
   it("Should mint a grade to the student", async function () {
     const STUDENT_ID = 333333n;
-    const STUDENT_GRADE = "Grade: 30L";
+
+    const METADATA = {
+      description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
+      image: "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+      name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
+      attributes: [
+        {
+          display_type: "number",
+          trait_type: "Grade",
+          value: 30,
+          max_value: 31,
+        },
+      ],
+    };
+    const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
+    const TOKEN_URI = btoa(METADATA_STR);
+
     const { soulboundGrade, student } = await loadFixture(
-      deploySoulboundGradeFixture
+      deploySoulboundGradeFixture,
     );
 
     await soulboundGrade.write.safeMint([
       student.account.address,
       STUDENT_ID,
-      STUDENT_GRADE,
+      TOKEN_URI,
     ]);
 
-    const studentGrade = await soulboundGrade.read.tokenURI([STUDENT_ID]);
+    const tokenUri = await soulboundGrade.read.tokenURI([STUDENT_ID]);
     const studentBalance = await soulboundGrade.read.balanceOf([
       student.account.address,
     ]);
 
     expect(studentBalance).to.equal(1n);
-    expect(studentGrade).to.equal(STUDENT_GRADE);
+    expect(tokenUri).to.equal(TOKEN_URI);
   });
 
   it("Should not transfer the grade to another student", async function () {
     const STUDENT_ID = 333333n;
-    const STUDENT_GRADE = "Grade: 30L";
+
+    const METADATA = {
+      description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
+      image: "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+      name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
+      attributes: [
+        {
+          display_type: "number",
+          trait_type: "Grade",
+          value: 30,
+          max_value: 31,
+        },
+      ],
+    };
+    const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
+    const TOKEN_URI = btoa(METADATA_STR);
 
     const { soulboundGrade, student, randomPerson } = await loadFixture(
-      deploySoulboundGradeFixture
+      deploySoulboundGradeFixture,
     );
 
     await soulboundGrade.write.safeMint([
       student.account.address,
       STUDENT_ID,
-      STUDENT_GRADE,
+      TOKEN_URI,
     ]);
 
     await expect(
@@ -60,7 +91,7 @@ describe("SoulboundGrade", function () {
         student.account.address,
         randomPerson.account.address,
         STUDENT_ID,
-      ])
+      ]),
     ).to.be.rejectedWith("SBGNonTransferrable");
   });
 });
