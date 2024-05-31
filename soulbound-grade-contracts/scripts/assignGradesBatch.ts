@@ -1,5 +1,6 @@
 import { network, viem } from "hardhat";
 import grades from "../constants/grade.test.json";
+import { image_url } from "../constants/metadataAssets";
 
 async function main() {
   const chainId = network.config.chainId || 31337;
@@ -17,7 +18,7 @@ async function main() {
 
     const metadata = {
       description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
-      image: "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+      image: image_url,
       name: `Soulbound Grade of s${grade.id.toString()}`,
       attributes: [
         {

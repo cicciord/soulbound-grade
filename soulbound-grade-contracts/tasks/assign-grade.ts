@@ -1,5 +1,6 @@
 import { task } from "hardhat/config";
 import { TaskArguments, HardhatRuntimeEnvironment } from "hardhat/types";
+import { image_url } from "../constants/metadataAssets";
 
 task("assign-grade", "Mints the NFT of the grade to the student")
   .addParam("studentAddress", "The student address")
@@ -19,7 +20,7 @@ task("assign-grade", "Mints the NFT of the grade to the student")
 
       const metadata = {
         description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
-        image: "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+        image: image_url,
         name: `Soulbound Grade of s${studentId.toString()}`,
         attributes: [
           {

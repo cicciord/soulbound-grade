@@ -17,7 +17,9 @@ const ShowGradeForm = () => {
     query: {
       enabled: studentId !== "" && studentId <= 999999 && studentId > 99999,
       select: (data) => {
-        const metadata_str = atob(data as string);
+        console.log(data);
+        const metadata_split = (data as string).split(",")[1];
+        const metadata_str = atob(metadata_split)
         const metadata = JSON.parse(metadata_str);
         return metadata.attributes[0].value;
       }
@@ -45,7 +47,7 @@ const ShowGradeForm = () => {
           <TextField
             fullWidth
             label="Grade"
-            value={data || ""}
+            value={data === 31 ? "30L" : data || ""}
             InputProps={{
               readOnly: true,
             }}
