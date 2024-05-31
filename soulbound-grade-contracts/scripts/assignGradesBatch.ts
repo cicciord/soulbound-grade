@@ -29,7 +29,7 @@ async function main() {
       ],
     };
     const metadata_str = Buffer.from(JSON.stringify(metadata)).toString();
-    const tokenUri = btoa(metadata_str);
+    const tokenUri = `data:application/josn;base64,${btoa(metadata_str)}`;
 
     console.log(
       `Assigning grade ${grade.grade === 31 ? "30L" : grade.grade} to student s${grade.id} at address ${grade.address}`,

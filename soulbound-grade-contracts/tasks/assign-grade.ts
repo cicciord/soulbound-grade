@@ -1,5 +1,4 @@
 import { task } from "hardhat/config";
-import { int } from "hardhat/internal/core/params/argumentTypes";
 import { TaskArguments, HardhatRuntimeEnvironment } from "hardhat/types";
 
 task("assign-grade", "Mints the NFT of the grade to the student")
@@ -32,7 +31,7 @@ task("assign-grade", "Mints the NFT of the grade to the student")
         ],
       };
       const metadata_str = Buffer.from(JSON.stringify(metadata)).toString();
-      const tokenUri = btoa(metadata_str);
+      const tokenUri = `data:application/josn;base64,${btoa(metadata_str)}`;
 
       const chainId = hre.network.config.chainId || 31337;
 

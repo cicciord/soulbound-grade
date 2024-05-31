@@ -36,7 +36,7 @@ describe("SoulboundGrade", function () {
       ],
     };
     const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
-    const TOKEN_URI = btoa(METADATA_STR);
+    const TOKEN_URI = `data:application/json;base64,${btoa(METADATA_STR)}`;
 
     const { soulboundGrade, student } = await loadFixture(
       deploySoulboundGradeFixture,
@@ -74,7 +74,7 @@ describe("SoulboundGrade", function () {
       ],
     };
     const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
-    const TOKEN_URI = btoa(METADATA_STR);
+    const TOKEN_URI = `data:application/json;base64,${btoa(METADATA_STR)}`;
 
     const { soulboundGrade, student, randomPerson } = await loadFixture(
       deploySoulboundGradeFixture,
