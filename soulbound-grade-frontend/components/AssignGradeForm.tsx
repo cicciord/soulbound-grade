@@ -19,6 +19,7 @@ import { useWriteContract } from "wagmi";
 
 import { abi, address } from "../constants/soulboundGrade";
 import { chains } from "../wagmi";
+import { image_url } from "../constants/metadataAssets";
 
 const gradesMenuItems = Array.from({ length: 14 }, (_, i) => i + 18).map(
   (grade) => (
@@ -118,8 +119,7 @@ const AssignGradeForm = () => {
               const metadata = {
                 description:
                   "Nft Grade for the Blockchain and Cryptoeconomy Course",
-                image:
-                  "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+                image: image_url,
                 name: `Soulbound Grade of s${studentId.toString()}`,
                 attributes: [
                   {
@@ -133,7 +133,7 @@ const AssignGradeForm = () => {
               const metadata_str = Buffer.from(
                 JSON.stringify(metadata),
               ).toString();
-              const tokenUri = btoa(metadata_str);
+              const tokenUri = `data:application/josn;base64,${btoa(metadata_str)}`;
               writeContract(
                 {
                   abi: abi,

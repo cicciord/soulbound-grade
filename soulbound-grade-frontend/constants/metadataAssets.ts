@@ -1,0 +1,1 @@
+export const image_url = "https://img.freepik.com/free-vector/online-certification-illustration-style_23-2148570822.jpg?w=1380&t=st=1717161249~exp=1717161849~hmac=2104e53a181362c3ac0e29b5dc80b81a54284f56bc127e585fe08045e3dcd60c"

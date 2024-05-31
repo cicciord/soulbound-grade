@@ -1,6 +1,7 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox-viem/network-helpers";
 import { viem } from "hardhat";
 import { expect } from "chai";
+import { image_url } from "../constants/metadataAssets";
 
 describe("SoulboundGrade", function () {
   async function deploySoulboundGradeFixture() {
@@ -24,7 +25,7 @@ describe("SoulboundGrade", function () {
 
     const METADATA = {
       description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
-      image: "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+      image: image_url,
       name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
       attributes: [
         {
@@ -62,7 +63,7 @@ describe("SoulboundGrade", function () {
 
     const METADATA = {
       description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
-      image: "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+      image: image_url,
       name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
       attributes: [
         {
