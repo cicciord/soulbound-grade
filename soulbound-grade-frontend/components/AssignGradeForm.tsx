@@ -1,7 +1,6 @@
 import {
   Alert,
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -10,11 +9,12 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useWriteContract } from "wagmi";
 
 import { abi, address } from "../constants/soulboundGrade";
@@ -25,7 +25,7 @@ const gradesMenuItems = Array.from({ length: 14 }, (_, i) => i + 18).map(
     <MenuItem key={grade} value={grade === 31 ? "30L" : grade.toString()}>
       {grade === 31 ? "30L" : grade.toString()}
     </MenuItem>
-  )
+  ),
 );
 
 const AssignGradeForm = () => {
@@ -33,7 +33,7 @@ const AssignGradeForm = () => {
   const [studentId, setStudentId] = useState<number | "">("");
   const [grade, setGrade] = useState<string>("18");
 
-  const { writeContract, reset, isPending, isSuccess, isError, error } =
+  const { writeContract, reset, isPending, isSuccess, isError } =
     useWriteContract();
 
   const handleGradeChange = (event: SelectChangeEvent) => {
@@ -50,24 +50,32 @@ const AssignGradeForm = () => {
 
   return (
     <Box>
-      {isSuccess && (
+      <Snackbar
+        open={isSuccess}
+        autoHideDuration={6000}
+        onClose={() => reset()}
+      >
         <Alert
-          severity="success"
           onClose={() => reset()}
-          sx={{ marginBottom: 2 }}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
         >
           Grade assigned successfully.
         </Alert>
-      )}
-      {isError && (
+      </Snackbar>
+
+      <Snackbar open={isError} autoHideDuration={6000} onClose={() => reset()}>
         <Alert
-          severity="error"
           onClose={() => reset()}
-          sx={{ marginBottom: 2, width: 625 }}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
         >
-          {error?.message}
+          Something went wrong.
         </Alert>
-      )}
+      </Snackbar>
+
       <Card raised sx={{ width: 625 }}>
         <CardContent>
           <Typography variant="h4">Assign Grade</Typography>
@@ -106,14 +114,33 @@ const AssignGradeForm = () => {
 
         <CardActions>
           <LoadingButton
-            onClick={() =>
+            onClick={() => {
+              const metadata = {
+                description:
+                  "Nft Grade for the Blockchain and Cryptoeconomy Course",
+                image:
+                  "https://file.didattica.polito.it/download/DSK_CONDIVISO/131376",
+                name: `Soulbound Grade of s${studentId.toString()}`,
+                attributes: [
+                  {
+                    display_type: "number",
+                    trait_type: "Grade",
+                    value: grade === "30L" ? 31 : parseInt(grade),
+                    max_value: 31,
+                  },
+                ],
+              };
+              const metadata_str = Buffer.from(
+                JSON.stringify(metadata),
+              ).toString();
+              const tokenUri = btoa(metadata_str);
               writeContract(
                 {
                   abi: abi,
                   address: address,
                   chainId: chains[0].id,
                   functionName: "safeMint",
-                  args: [studentAddress, studentId, grade],
+                  args: [studentAddress, studentId, tokenUri],
                 },
                 {
                   onSuccess: () => {
@@ -121,9 +148,9 @@ const AssignGradeForm = () => {
                     setStudentId("");
                     setGrade("18");
                   },
-                }
-              )
-            }
+                },
+              );
+            }}
             loading={isPending}
           >
             <span>Submit</span>
