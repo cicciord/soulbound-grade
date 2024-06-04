@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 error SBGNonTransferrable();
 
 contract SoulboundGrade is ERC721, ERC721URIStorage, Ownable {
-    constructor() ERC721("Blockchain Grade", "BKG") Ownable(msg.sender) {}
+    constructor() ERC721("Soulbound Grade", "SBG") Ownable(msg.sender) {}
 
     /**
      * @notice mint the NFT with the grade data to the student
