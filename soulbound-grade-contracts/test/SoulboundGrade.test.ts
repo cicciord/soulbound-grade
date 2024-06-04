@@ -1,98 +1,101 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox-viem/network-helpers";
-import { viem } from "hardhat";
+import { network, viem } from "hardhat";
 import { expect } from "chai";
 import { image_url } from "../constants/metadataAssets";
 
-describe("SoulboundGrade", function () {
-  async function deploySoulboundGradeFixture() {
-    const [professor, student, randomPerson] = await viem.getWalletClients();
+!["localhost", "hardhat"].includes(network.name)
+  ? describe.skip
+  : describe("SoulboundGrade", function () {
+      async function deploySoulboundGradeFixture() {
+        const [professor, student, randomPerson] =
+          await viem.getWalletClients();
 
-    const soulboundGrade = await viem.deployContract("SoulboundGrade");
+        const soulboundGrade = await viem.deployContract("SoulboundGrade");
 
-    const publicClient = await viem.getPublicClient();
+        const publicClient = await viem.getPublicClient();
 
-    return {
-      soulboundGrade,
-      professor,
-      student,
-      randomPerson,
-      publicClient,
-    };
-  }
+        return {
+          soulboundGrade,
+          professor,
+          student,
+          randomPerson,
+          publicClient,
+        };
+      }
 
-  it("Should mint a grade to the student", async function () {
-    const STUDENT_ID = 333333n;
+      it("Should mint a grade to the student", async function () {
+        const STUDENT_ID = 333333n;
 
-    const METADATA = {
-      description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
-      image: image_url,
-      name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
-      attributes: [
-        {
-          display_type: "number",
-          trait_type: "Grade",
-          value: 30,
-          max_value: 31,
-        },
-      ],
-    };
-    const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
-    const TOKEN_URI = `data:application/json;base64,${btoa(METADATA_STR)}`;
+        const METADATA = {
+          description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
+          image: image_url,
+          name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
+          attributes: [
+            {
+              display_type: "number",
+              trait_type: "Grade",
+              value: 30,
+              max_value: 31,
+            },
+          ],
+        };
+        const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
+        const TOKEN_URI = `data:application/json;base64,${btoa(METADATA_STR)}`;
 
-    const { soulboundGrade, student } = await loadFixture(
-      deploySoulboundGradeFixture,
-    );
+        const { soulboundGrade, student } = await loadFixture(
+          deploySoulboundGradeFixture,
+        );
 
-    await soulboundGrade.write.safeMint([
-      student.account.address,
-      STUDENT_ID,
-      TOKEN_URI,
-    ]);
+        await soulboundGrade.write.safeMint([
+          student.account.address,
+          STUDENT_ID,
+          TOKEN_URI,
+        ]);
 
-    const tokenUri = await soulboundGrade.read.tokenURI([STUDENT_ID]);
-    const studentBalance = await soulboundGrade.read.balanceOf([
-      student.account.address,
-    ]);
+        const tokenUri = await soulboundGrade.read.tokenURI([STUDENT_ID]);
+        const studentBalance = await soulboundGrade.read.balanceOf([
+          student.account.address,
+        ]);
 
-    expect(studentBalance).to.equal(1n);
-    expect(tokenUri).to.equal(TOKEN_URI);
-  });
+        expect(studentBalance).to.equal(1n);
+        expect(tokenUri).to.equal(TOKEN_URI);
+      });
 
-  it("Should not transfer the grade to another student", async function () {
-    const STUDENT_ID = 333333n;
+      it("Should not transfer the grade to another student", async function () {
+        const STUDENT_ID = 333333n;
 
-    const METADATA = {
-      description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
-      image: image_url,
-      name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
-      attributes: [
-        {
-          display_type: "number",
-          trait_type: "Grade",
-          value: 30,
-          max_value: 31,
-        },
-      ],
-    };
-    const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
-    const TOKEN_URI = `data:application/json;base64,${btoa(METADATA_STR)}`;
+        const METADATA = {
+          description: "Nft Grade for the Blockchain and Cryptoeconomy Course",
+          image: image_url,
+          name: `Soulbound Grade of s${STUDENT_ID.toString()}`,
+          attributes: [
+            {
+              display_type: "number",
+              trait_type: "Grade",
+              value: 30,
+              max_value: 31,
+            },
+          ],
+        };
+        const METADATA_STR = Buffer.from(JSON.stringify(METADATA)).toString();
+        const TOKEN_URI = `data:application/json;base64,${btoa(METADATA_STR)}`;
 
-    const { soulboundGrade, student, randomPerson } = await loadFixture(
-      deploySoulboundGradeFixture,
-    );
+        const { soulboundGrade, student, randomPerson } = await loadFixture(
+          deploySoulboundGradeFixture,
+        );
 
-    await soulboundGrade.write.safeMint([
-      student.account.address,
-      STUDENT_ID,
-      TOKEN_URI,
-    ]);
+        await soulboundGrade.write.safeMint([
+          student.account.address,
+          STUDENT_ID,
+          TOKEN_URI,
+        ]);
 
-    await expect(
-      soulboundGrade.write.safeTransferFrom([
-        student.account.address,
-        randomPerson.account.address,
-        STUDENT_ID,
-      ]),
-    ).to.be.rejectedWith("SBGNonTransferrable");
-  });
-});
+        await expect(
+          soulboundGrade.write.safeTransferFrom([
+            student.account.address,
+            randomPerson.account.address,
+            STUDENT_ID,
+          ]),
+        ).to.be.rejectedWith("SBGNonTransferrable");
+      });
+    });
