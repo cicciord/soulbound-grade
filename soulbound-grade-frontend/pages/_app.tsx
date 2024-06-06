@@ -17,7 +17,7 @@ const client = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={config} >
       <QueryClientProvider client={client}>
         <RainbowKitProvider>
           <Component {...pageProps} />
