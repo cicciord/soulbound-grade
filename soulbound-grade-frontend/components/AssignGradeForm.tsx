@@ -34,7 +34,7 @@ const AssignGradeForm = () => {
   const [studentId, setStudentId] = useState<number | "">("");
   const [grade, setGrade] = useState<string>("18");
 
-  const { writeContract, reset, isPending, isSuccess, isError } =
+  const { writeContract, reset, isPending, isSuccess, isError, error } =
     useWriteContract();
 
   const handleGradeChange = (event: SelectChangeEvent) => {
@@ -133,7 +133,7 @@ const AssignGradeForm = () => {
               const metadata_str = Buffer.from(
                 JSON.stringify(metadata),
               ).toString();
-              const tokenUri = `data:application/josn;base64,${btoa(metadata_str)}`;
+              const tokenUri = `data:application/json;base64,${btoa(metadata_str)}`;
               writeContract(
                 {
                   abi: abi,
