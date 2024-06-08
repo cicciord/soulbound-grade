@@ -41,7 +41,7 @@ Soulbound Grade is a demo project that uses soulbound NFTs to grade students. It
    Copy the `.env.example` file to `.env` and update the `NEXT_WC_PROJECT_ID` with your project ID. You can get one [here](https://cloud.walletconnect.com/)
 
    ```sh
-   cp .env.example .env
+   cp .env.example .env.local
    ```
 
    ```sh
